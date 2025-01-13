@@ -1,0 +1,31 @@
+# Archivos de compilación
+bin/
+obj/
+out/
+
+# Configuración del entorno
+.vscode/
+.idea/
+*.user
+*.suo
+
+# Archivos generados por herramientas
+*.log
+*.lock.json
+project.lock.json
+
+# Archivos NuGet
+*.nupkg
+.nuget/
+
+# Archivos de pruebas
+TestResults/
+*.trx
+*.coverage
+
+# Archivos del entorno de Visual Studio
+.vs/
+
+# Archivos temporales del sistema operativo
+*.DS_Store
+Thumbs.db

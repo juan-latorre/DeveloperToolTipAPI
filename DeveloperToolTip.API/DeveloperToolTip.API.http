@@ -1,0 +1,6 @@
+@DeveloperToolTip.API_HostAddress = http://localhost:5105
+
+GET {{DeveloperToolTip.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
