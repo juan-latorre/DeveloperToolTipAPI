@@ -41,6 +41,69 @@ namespace DeveloperToolTip.API.Controllers
             }
         }
 
+        [HttpPost("logout")]
+        [Authorize]
+        public async Task<IActionResult> Logout()
+        {
+            try
+            {
+                // Obtener el DeveloperId del token de usuario autenticado
+                var developerId = int.Parse(User.FindFirst("DeveloperId")?.Value ?? "0");
+
+                // Finalizar la sesión activa del Developer
+                var success = await _authenticateDeveloperUseCase.EndSessionAsync(developerId);
+
+                if (success)
+                {
+                    return Ok(new { Message = "Logout successful" });
+                }
+
+                return BadRequest(new { Message = "No active session found to logout" });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { Message = ex.Message });
+            }
+        }
+
+        [HttpGet("active-session")]
+        [Authorize]
+        public async Task<IActionResult> GetActiveSession()
+        {
+            try
+            {
+                // Obtener el DeveloperId del token de usuario autenticado
+                var developerId = int.Parse(User.FindFirst("DeveloperId")?.Value ?? "0");
+
+                // Recuperar la sesión activa
+                var activeSession = await _authenticateDeveloperUseCase.GetActiveSessionAsync(developerId);
+
+                if (activeSession != null)
+                {
+                    return Ok(new
+                    {
+                        SessionId = activeSession.Id,
+                        DeveloperId = activeSession.DeveloperId,
+                        //LoginDate = activeSession.LoginDate,
+                        IpAddress = activeSession.IpAddress,
+                        IsActive = activeSession.IsActive,
+                        //Developer = new
+                        //{
+                        //    activeSession.Developer.Id,
+                        //    activeSession.Developer.FirstName,
+                        //    activeSession.Developer.Email,
+                        //    activeSession.Developer.RoleId
+                        //}
+                    });
+                }
+
+                return NotFound(new { Message = "No active session found" });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { Message = ex.Message });
+            }
+        }
 
     }
 }
