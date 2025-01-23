@@ -43,7 +43,7 @@ namespace DeveloperToolTip.Application.UseCases.AuthUseCases
             // Cerrar cualquier sesión activa previa del mismo Developer
             var activeSession = await _developerRepository.GetLoggedInDeveloperAsync(developer.Id);
 
-            if (activeSession != null && !activeSession.IsActive)
+            if (activeSession != null && activeSession.IsActive == true)
             {
                 await _developerRepository.CloseActiveSessions(developer.Id);
             }
