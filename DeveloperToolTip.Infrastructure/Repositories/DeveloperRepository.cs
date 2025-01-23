@@ -49,5 +49,40 @@ namespace DeveloperToolTip.Infrastructure.Repositories
         {
             return await _context.Developers.FirstOrDefaultAsync(d => d.Login == login);
         }
+
+        public async Task<DeveloperLogin> CreateLoginAsync(DeveloperLogin developerLogin)
+        {
+            // Agregar el registro de login
+            await _context.DeveloperLogins.AddAsync(developerLogin);
+
+            // Guardar los cambios
+            await _context.SaveChangesAsync();
+
+            return developerLogin;
+        }
+
+        public async Task<DeveloperLogin?> GetLoggedInDeveloperAsync(int developerId)
+        {
+            return await _context.DeveloperLogins
+                   .Include(dl => dl.Developer) // Incluye la relación con Developer
+                   .FirstOrDefaultAsync(dl => dl.IsActive && dl.DeveloperId == developerId); // Busca una sesión activa
+        }
+
+
+        public async Task CloseActiveSessions(int developerId)
+        {
+            var activeSessions = await _context.DeveloperLogins
+                .Where(dl => dl.DeveloperId == developerId && dl.IsActive)
+                .ToListAsync();
+
+            foreach (var session in activeSessions)
+            {
+                session.IsActive = false;
+            }
+
+            await _context.SaveChangesAsync();
+        }
+
+
     }
 }

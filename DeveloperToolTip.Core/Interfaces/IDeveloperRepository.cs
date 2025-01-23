@@ -15,5 +15,8 @@ namespace DeveloperToolTip.Core.Interfaces
         Task UpdateAsync(Developer developer);
         Task DeleteAsync(int id);
         Task<Developer> GetByLoginAsync(string login);
+        Task<DeveloperLogin> CreateLoginAsync(DeveloperLogin developerLogin);
+        Task<DeveloperLogin?> GetLoggedInDeveloperAsync(int developerId);
+        Task CloseActiveSessions(int developerId);        
     }
 }
