@@ -17,9 +17,21 @@ namespace DeveloperToolTip.Infrastructure
         public DbSet<TopicCategory> TopicCategories { get; set; }
         public DbSet<Topic> Topics { get; set; }
         public DbSet<TopicContent> TopicContent { get; set; }
+        public DbSet<DeveloperLogin> DeveloperLogins { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            // Configuración de DeveloperLogin
+            modelBuilder.Entity<DeveloperLogin>()
+                .HasOne(dl => dl.Developer) // Relación con Developer
+                .WithMany() // Un Developer puede tener muchos logins
+                .HasForeignKey(dl => dl.DeveloperId) // Llave foránea: DeveloperId
+                .OnDelete(DeleteBehavior.Restrict); // Evita eliminación en cascada
+
+            modelBuilder.Entity<DeveloperLogin>()
+                .Property(dl => dl.LoginDate)
+                .HasDefaultValueSql("GETDATE()"); // Valor predeterminado para LoginDate
+
             // Configuración de la relación Topic -> Developer (CreatedBy)
             modelBuilder.Entity<Topic>()
                 .HasOne(t => t.Creator) // Relación con la entidad Developer
